@@ -29,21 +29,30 @@ public class Grouper {
             case 0:
                 this.groupMap.add(++this.groupsCount, line);
                 for(int i = 0; i < stringSplit.size(); i++){
-                    groupLinkMap.add(new Key(stringSplit.get(i), i), groupsCount);
+                    String note = stringSplit.get(i);
+                    if(!note.equals("\"\"")){
+                        groupLinkMap.add(new Key(stringSplit.get(i), i), groupsCount);
+                    }
                 }
                 break;
             case 1:
                 Integer groupToAdd = possibleGroups.iterator().next();
                 groupMap.add(groupToAdd, line);
                 for(int i = 0; i < stringSplit.size(); i++){
-                    groupLinkMap.add(new Key(stringSplit.get(i), i), groupToAdd);
+                    String note = stringSplit.get(i);
+                    if(!note.equals("\"\"")) {
+                        groupLinkMap.add(new Key(stringSplit.get(i), i), groupToAdd);
+                    }
                 }
                 break;
             default:
                 groupToAdd = possibleGroups.iterator().next();
                 groupMap.add(groupToAdd, line);
                 for(int i = 0; i < stringSplit.size(); i++){
-                    groupLinkMap.add(new Key(stringSplit.get(i), i), groupToAdd);
+                    String note = stringSplit.get(i);
+                    if(!note.equals("\"\"")) {
+                        groupLinkMap.add(new Key(stringSplit.get(i), i), groupToAdd);
+                    }
                 }
                 possibleGroups.stream().skip(1).forEach(x -> {
                     groupLinkMap.merge(groupToAdd, x);

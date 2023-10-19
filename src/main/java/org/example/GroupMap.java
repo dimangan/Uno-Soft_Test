@@ -4,17 +4,14 @@ import java.io.File;
 import java.io.IOException;
 import java.io.PrintWriter;
 import java.nio.file.Path;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 public class GroupMap {
-    private final Map<Integer, List<String>> groupMap;
+    private final Map<Integer, Set<String>> groupMap;
     public GroupMap() {
         this.groupMap = new HashMap<>();
     }
-    public Map<Integer, List<String>> getGroupMap() {
+    public Map<Integer, Set<String>> getGroupMap() {
         return this.groupMap;
     }
     public void add(Integer key, String string){
@@ -22,7 +19,7 @@ public class GroupMap {
             this.groupMap.get(key).add(string);
         }
         else{
-            List<String> newGroup = new ArrayList<>();
+            Set<String> newGroup = new HashSet<>();
             newGroup.add(string);
             this.groupMap.put(key, newGroup);
         }

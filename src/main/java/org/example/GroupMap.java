@@ -33,6 +33,7 @@ public class GroupMap {
     }
     public void printGroupsInFile() throws IOException {
         Path outputPath = Path.of("groupedStrings.txt").toAbsolutePath();
+        System.out.println("Выходной файл находится по пути:");
         System.out.println(outputPath);
         File file = new File(outputPath.toString());
         file.createNewFile();

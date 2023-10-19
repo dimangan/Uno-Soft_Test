@@ -16,7 +16,7 @@ public class Main {
             GroupLinkMap groupLinkMap = new GroupLinkMap();
             Grouper grouper = new Grouper(groupLinkMap, groupMap);
             Reader reader = new Reader(path);
-            while(reader.ready()){
+            while(reader != null && reader.ready()){
                 String line = reader.readLine();
                 List<String> stringSplit = reader.isCorrect(line);
                 if(stringSplit != null){
@@ -24,6 +24,7 @@ public class Main {
                     grouper.groupStrings(possibleGroups, line, stringSplit);
                 }
             }
+            reader.close();
             groupMap.getGroupMap().entrySet().removeIf(entry -> groupMap.getGroupMap().get(entry.getKey()).size() < 2);
             long seconds = Instant.now().getEpochSecond() - timeStart;
             System.out.println("Amount of groups: " + groupMap.getGroupMap().size());

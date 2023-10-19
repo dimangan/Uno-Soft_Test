@@ -7,6 +7,7 @@ import java.nio.file.Path;
 import java.util.Arrays;
 import java.util.List;
 
+
 public class Reader {
     BufferedReader bf;
     public Reader(Path path){
@@ -14,6 +15,7 @@ public class Reader {
             this.bf = Files.newBufferedReader(path);
         }
         catch(IOException e){
+            System.out.println("Файл не найден!");
             this.bf = null;
         }
     }
@@ -43,11 +45,26 @@ public class Reader {
     public boolean ready(){
         boolean ready;
         try{
-            ready = bf.ready();
+            if(this.bf != null){
+                ready = bf.ready();
+            }
+            else{
+                ready = false;
+            }
         }
         catch(IOException e){
             ready = false;
         }
         return ready;
+    }
+    public void close(){
+        try {
+            if(this.bf != null){
+                this.bf.close();
+            }
+        }
+        catch(IOException e){
+            System.out.println(e.getMessage());
+        }
     }
 }

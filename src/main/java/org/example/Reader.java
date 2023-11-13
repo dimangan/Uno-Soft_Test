@@ -4,7 +4,7 @@ import java.io.BufferedReader;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
-import java.util.Arrays;
+import java.util.ArrayList;
 import java.util.List;
 
 
@@ -30,7 +30,16 @@ public class Reader {
         return line;
     }
     private List<String> splitString(String inputString){
-        return Arrays.asList(inputString.split(";"));
+        List<String> splitStringList = new ArrayList<>();
+        for(String note: inputString.split(";")){
+            if(note.length() != 0){
+                splitStringList.add(note);
+            }
+            else{
+                splitStringList.add("?");
+            }
+        }
+        return splitStringList;
     }
     public List<String> isCorrect(String inputString){
         List<String> correctSplitString = splitString(inputString);

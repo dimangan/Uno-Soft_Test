@@ -7,24 +7,24 @@ import java.nio.file.Path;
 import java.util.*;
 
 public class GroupMap {
-    private final Map<Integer, Set<String>> groupMap;
+    private final Map<GroupId, Set<String>> groupMap;
     public GroupMap() {
         this.groupMap = new HashMap<>();
     }
-    public Map<Integer, Set<String>> getGroupMap() {
+    public Map<GroupId, Set<String>> getGroupMap() {
         return this.groupMap;
     }
-    public void add(Integer key, String string){
-        if(this.groupMap.get(key) != null){
-            this.groupMap.get(key).add(string);
+    public void add(GroupId groupId, String string){
+        if(this.groupMap.get(groupId) != null){
+            this.groupMap.get(groupId).add(string);
         }
         else{
-            Set<String> newGroup = new HashSet<>();
-            newGroup.add(string);
-            this.groupMap.put(key, newGroup);
+            Set<String> newStringSet = new HashSet<>();
+            newStringSet.add(string);
+            this.groupMap.put(groupId, newStringSet);
         }
     }
-    public void merge(Integer firstGroup, Integer secondGroup){
+    public void merge(GroupId firstGroup, GroupId secondGroup){
         this.groupMap.get(firstGroup).addAll(this.groupMap.get(secondGroup));
         this.groupMap.remove(secondGroup);
     }
@@ -37,9 +37,9 @@ public class GroupMap {
         PrintWriter printWriter = new PrintWriter(file);
         int groupId = 1;
         printWriter.println("Количество групп:" + this.groupMap.size() + "\n");
-        for(Integer key: this.groupMap.keySet()){
+        for(GroupId group: this.groupMap.keySet()){
             printWriter.println("Группа номер " + groupId + ":");
-            for(String string: this.groupMap.get(key)){
+            for(String string: this.groupMap.get(group)){
                 printWriter.println(string);
             }
             groupId++;

@@ -1,47 +1,47 @@
 package org.example;
 
-import java.util.List;
-import java.util.Set;
-import java.util.TreeSet;
+import java.util.*;
 
 public class Grouper {
-    private final GroupLinkMap groupLinkMap;
+    private final NotePositionMap notePositionMap;
     private final GroupMap groupMap;
     private Integer groupsCount;
-    public Grouper(GroupLinkMap groupLinkMap, GroupMap groupMap){
-        this.groupLinkMap = groupLinkMap;
+    public Grouper(NotePositionMap notePositionMap, GroupMap groupMap){
+        this.notePositionMap = notePositionMap;
         this.groupMap = groupMap;
         this.groupsCount = 0;
     }
-    public Set<Integer> getPossibleGroups(List<String> inputSplitString){
-        Set<Integer> possibleGroups = new TreeSet<>();
+    public Set<GroupId> getPossibleGroups(List<String> inputSplitString){
+        Set<GroupId> possibleGroups = new HashSet<>();
         for(int i = 0; i < inputSplitString.size(); i++){
             Key key = new Key(inputSplitString.get(i), i);
-            GroupLink group = groupLinkMap.getGroupLinkMap().get(key);
+            GroupId group = this.notePositionMap.getNotePositionMap().get(key);
             if(group != null){
-                possibleGroups.add(group.getGroup());
+                possibleGroups.add(group);
             }
         }
         return possibleGroups;
     }
-    public void groupStrings(Set<Integer> possibleGroups, String line, List<String> stringSplit){
+    public void groupStrings(Set<GroupId> possibleGroups, String line, List<String> stringSplit){
         switch(possibleGroups.size()){
             case 0:
-                this.groupMap.add(++this.groupsCount, line);
+                this.groupsCount++;
+                GroupId newGroup = new GroupId(this.groupsCount);
+                this.groupMap.add(newGroup, line);
                 for(int i = 0; i < stringSplit.size(); i++){
                     String note = stringSplit.get(i);
-                    if(!note.equals("\"\"")){
-                        groupLinkMap.add(new Key(stringSplit.get(i), i), groupsCount);
+                    if(!note.equals("\"\"") && !note.equals("?")){
+                        notePositionMap.add(new Key(stringSplit.get(i), i), newGroup);
                     }
                 }
                 break;
             case 1:
-                Integer groupToAdd = possibleGroups.iterator().next();
+                GroupId groupToAdd = possibleGroups.iterator().next();
                 groupMap.add(groupToAdd, line);
                 for(int i = 0; i < stringSplit.size(); i++){
                     String note = stringSplit.get(i);
-                    if(!note.equals("\"\"")) {
-                        groupLinkMap.add(new Key(stringSplit.get(i), i), groupToAdd);
+                    if(!note.equals("\"\"") && !note.equals("?")) {
+                        notePositionMap.add(new Key(stringSplit.get(i), i), groupToAdd);
                     }
                 }
                 break;
@@ -50,17 +50,15 @@ public class Grouper {
                 groupMap.add(groupToAdd, line);
                 for(int i = 0; i < stringSplit.size(); i++){
                     String note = stringSplit.get(i);
-                    if(!note.equals("\"\"")) {
-                        groupLinkMap.add(new Key(stringSplit.get(i), i), groupToAdd);
+                    if(!note.equals("\"\"") && !note.equals("?")) {
+                        notePositionMap.add(new Key(stringSplit.get(i), i), groupToAdd);
                     }
                 }
                 possibleGroups.stream().skip(1).forEach(x -> {
-                    groupLinkMap.merge(groupToAdd, x);
                     groupMap.merge(groupToAdd, x);
+                    notePositionMap.merge(groupToAdd, x);
                 });
                 break;
         }
     }
-
-
 }

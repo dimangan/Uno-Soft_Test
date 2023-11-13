@@ -13,14 +13,14 @@ public class Main {
             Path path = Path.of(args[0]);
             long timeStart = Instant.now().getEpochSecond();
             GroupMap groupMap = new GroupMap();
-            GroupLinkMap groupLinkMap = new GroupLinkMap();
-            Grouper grouper = new Grouper(groupLinkMap, groupMap);
+            NotePositionMap notePositionMap = new NotePositionMap();
+            Grouper grouper = new Grouper(notePositionMap, groupMap);
             Reader reader = new Reader(path);
             while(reader != null && reader.ready()){
                 String line = reader.readLine();
                 List<String> stringSplit = reader.isCorrect(line);
                 if(stringSplit != null){
-                    Set<Integer> possibleGroups = grouper.getPossibleGroups(stringSplit);
+                    Set<GroupId> possibleGroups = grouper.getPossibleGroups(stringSplit);
                     grouper.groupStrings(possibleGroups, line, stringSplit);
                 }
             }

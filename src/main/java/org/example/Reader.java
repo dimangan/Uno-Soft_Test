@@ -4,8 +4,7 @@ import java.io.BufferedReader;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
-import java.util.ArrayList;
-import java.util.List;
+import java.util.*;
 
 
 public class Reader {
@@ -19,61 +18,29 @@ public class Reader {
             this.bf = null;
         }
     }
-    public String readLine(){
-        String line;
-        try{
-            line = bf.readLine();
+    public List<List<String>> readAllLines() throws IOException{
+        List<List<String>> allSplitLines = new ArrayList<>();
+        Set<String> allUniqLines = new HashSet<>();
+        while(bf.ready()){
+            allUniqLines.add(bf.readLine());
         }
-        catch(IOException e){
-            line = null;
+        bf.close();
+        for(String uniqLine: allUniqLines){
+            List<String> splitLineList = splitLine(uniqLine);
+            if(!splitLineList.isEmpty()){
+                allSplitLines.add(splitLineList);
+            }
         }
-        return line;
+        return allSplitLines;
     }
-    private List<String> splitString(String inputString){
-        List<String> splitStringList = new ArrayList<>();
-        for(String note: inputString.split(";")){
-            if(note.length() != 0){
-                splitStringList.add(note);
+    private List<String> splitLine(String inputLine){
+        List<String> splitLineList = new ArrayList<>();
+        for(String note: inputLine.split(";")){
+            if(!note.equals("")){
+                note = note.substring(1, note.length() - 1);
             }
-            else{
-                splitStringList.add("?");
-            }
+            splitLineList.add(note);
         }
-        return splitStringList;
-    }
-    public List<String> isCorrect(String inputString){
-        List<String> correctSplitString = splitString(inputString);
-        for(String note: correctSplitString){
-            if(note.split("\"").length > 2){
-                correctSplitString = null;
-                break;
-            }
-        }
-        return correctSplitString;
-    }
-    public boolean ready(){
-        boolean ready;
-        try{
-            if(this.bf != null){
-                ready = bf.ready();
-            }
-            else{
-                ready = false;
-            }
-        }
-        catch(IOException e){
-            ready = false;
-        }
-        return ready;
-    }
-    public void close(){
-        try {
-            if(this.bf != null){
-                this.bf.close();
-            }
-        }
-        catch(IOException e){
-            System.out.println(e.getMessage());
-        }
+        return splitLineList;
     }
 }
